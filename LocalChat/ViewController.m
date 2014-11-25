@@ -25,6 +25,12 @@
                                              selector:@selector(keyboardWillHide:)
                                                  name:UIKeyboardWillHideNotification
                                                object:nil];
+    
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(hideKeyboard)];
+    
+    tap.numberOfTapsRequired = 1;
+    
+    [self.view addGestureRecognizer:tap];
 }
 
 -(void) hideKeyboard {
@@ -33,7 +39,7 @@
 
 -(void)textFieldDidEndEditing:(UITextField *)textField {
     
-
+    [self hideKeyboard];
     
 }
 
@@ -41,6 +47,29 @@
     [self hideKeyboard];
     return NO;
 }
+
+
+-(void)keyboardWasShown: (NSNotification *)notification {
+    
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    [UIView animateWithDuration:.1 animations:^{
+        self.textEntryView.center = CGPointMake(self.textEntryView.center.x, self.textEntryView.center.y -keyboardSize.height);
+    }];
+    
+}
+
+-(void)keyboardWillHide: (NSNotification *)notification {
+    //Get the size of the keyboard so we know how far to move.
+    CGSize keyboardSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    
+    //Move our view with a smooth animation adding the keyboard height.
+    [UIView animateWithDuration:.3 animations:^{
+        self.textEntryView.center = CGPointMake(self.textEntryView.center.x, self.textEntryView.center.y + keyboardSize.height);
+    }];
+    
+}
+
 
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];

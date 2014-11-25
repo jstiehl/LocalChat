@@ -17,6 +17,29 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWasShown:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardWillHide:)
+                                                 name:UIKeyboardWillHideNotification
+                                               object:nil];
+}
+
+-(void) hideKeyboard {
+    [self.chatText resignFirstResponder];
+}
+
+-(void)textFieldDidEndEditing:(UITextField *)textField {
+    
+
+    
+}
+
+-(BOOL)textFieldShouldReturn:(UITextField *)textField {
+    [self hideKeyboard];
+    return NO;
 }
 
 - (void)didReceiveMemoryWarning {
